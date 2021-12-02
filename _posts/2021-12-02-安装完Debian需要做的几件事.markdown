@@ -1,0 +1,69 @@
+---
+layout: post
+title:  "安装完Debian需要做的几件事"
+date:   2021-12-02
+categories: debian 环境配置
+---
+# 安装debian需要做的几件事
+## 修改源
+选择一个合适的源，例如 http://ftp.debian.org/debian 将/etc/apt/sources.list改为以下内容：
+```
+deb  http://ftp.debian.org/debian testing main contrib non-free
+# deb-src  http://ftp.debian.org/debian testing main contrib non-free
+
+deb  http://ftp.debian.org/debian testing-updates main contrib non-free
+# deb-src  http://ftp.debian.org/debian testing-updates main contrib non-free
+
+deb http://security.debian.org/ testing/updates main contrib non-free
+# deb-src http://security.debian.org/ testing/updates main contrib non-free
+``` 
+## 设置时区
+通过命令tzselect来设置时区，然后
+```sh
+cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+``` 
+## 安装sudo
+debian默认的初始安装是没有sudo的，需要自己安装。
+```sh
+$ su # 切换到root
+# apt install sudo
+# adduser username sudo # 将用户username加入到sudo组中
+```
+## 安装zsh替代bash
+依次执行以下命令：
+```sh
+$ sudo apt install zsh 
+$ git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+$ cp ~/.zshrc ~/.zshrc.bak
+$ cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+$ chsh -s /bin/zsh
+```
+更改zsh主题为ys，编辑文件~/.zshrc
+```
+ZSH_THEME="ys"
+```
+## 配置Vim
+```sh
+$ sudo apt install vim vim-nox
+$ curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim # 安装vim插件管理器VimPlug
+$ wget https://raw.githubusercontent.com/fantasiajo/configs/master/vim/.vimrc -P ~  
+```
+进入Vim执行命令:PlugInstall安装插件。  
+
+配置YCM
+```
+$ cd ~/.vim/plugged/YouCompleteMe/       
+$ ./install.sh --clang-completer 
+$ wget https://raw.githubusercontent.com/fantasiajo/configs/master/vim/.ycm_extra_conf.py -P ~
+```
+## 安装中文字体
+```
+apt install fonts-wqy-zenhei # 文泉驿正黑
+```
+## 安装中文输入法 
+```sh
+apt install fcitx-pinyin
+apt install fcitx-sunpinyin
+apt install fcitx-googlepinyin
+apt install fcitx-libpinyin
+```
